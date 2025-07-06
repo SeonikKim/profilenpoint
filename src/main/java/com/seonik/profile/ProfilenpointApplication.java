@@ -3,7 +3,7 @@ package com.seonik.profile;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.seonik")
 public class ProfilenpointApplication {
 
 	public static void main(String[] args) {
