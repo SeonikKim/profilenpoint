@@ -15,7 +15,6 @@ public class UserInfoController {
 		this.userInfoService = userInfoService;
 	}
 
-	@GetMapping
 	public Page<UserInfo> listUserInfo(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size,
 			@RequestParam(value = "sort", required = false) String sort) {
 		if (page == 0) {
@@ -27,8 +26,9 @@ public class UserInfoController {
 		return userInfoService.getUserInfos(page, size, sort);
 	}
 
-	@PostMapping("/{id}/viewcount")
-	public UserInfo updateViewCount(@PathVariable("id") Integer id) {
-		return userInfoService.incrementViewCount(id);
+	@GetMapping("/{id}")
+	public UserInfo getUserInfo(@PathVariable("id") Integer id) {
+		return userInfoService.getUserInfo(id);
 	}
+
 }

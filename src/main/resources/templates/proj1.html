@@ -4,34 +4,61 @@
 <meta charset="UTF-8">
 <title>프로필 조회 서비스</title>
 <style>
+body {
+	padding: 20px;
+}
+
+.proj1Wrap {
+	display: flex;
+	flex-direction: column;
+}
+
+.sortWrap {
+	padding-bottom: 10px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+tbody tr {
+	cursor: pointer;
+}
+
 th, td {
-    padding: 10px;
-    text-align: center;
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #333;
+}
+
+.btnWrap {
+	padding-top: 10px;
 }
 </style>
-<div>
-    <h2>회원 프로필 조회 서비스</h2>
-    <label>정렬:
-        <select id="sortSelect">
-            <option value="name">이름 가나다순</option>
-            <option value="views">조회순</option>
-            <option value="created">등록 최신순</option>
-        </select>
-    </label>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>회원명</th>
-            <th>조회수</th>
-            <th>등록일</th>
-        </tr>
-        </thead>
-        <tbody id="userTableBody">
-        </tbody>
-    </table>
-    <button id="prevPage">이전</button>
-    <span id="pageInfo"></span>
-    <button id="nextPage">다음</button>
+<div class="proj1Wrap">
+	<h2>회원 프로필 조회 서비스</h2>
+	<label class="sortWrap">정렬: <select id="sortSelect">
+			<option value="name">이름 가나다순</option>
+			<option value="views">조회순</option>
+			<option value="created">등록 최신순</option>
+	</select>
+	</label>
+	<table>
+		<thead>
+			<tr>
+				<th>회원명</th>
+				<th>조회수</th>
+				<th>등록일</th>
+			</tr>
+		</thead>
+		<tbody id="userTableBody">
+		</tbody>
+	</table>
+	<div class="btnWrap">
+		<button id="prevPage">이전</button>
+		<span id="pageInfo"></span>
+		<button id="nextPage">다음</button>
+	</div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -52,8 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const row = document.createElement('tr');
                     row.innerHTML = `<td>${u.name}</td><td>${u.viewCount}</td><td>${u.createdAt.replace('T',' ')}</td>`;
                     row.addEventListener('click', () => {
-                        fetch(`/api/userinfo/${u.id}/viewcount`, {method: 'POST'})
-                            .then(() => load());
+                    	 window.location.href = `/proj1/detail?id=${u.id}`;
                     });
                     tbody.appendChild(row);
                 });
