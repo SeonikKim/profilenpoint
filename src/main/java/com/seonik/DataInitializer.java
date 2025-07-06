@@ -21,6 +21,9 @@ public class DataInitializer implements CommandLineRunner {
             repository.save(new UserInfo("user1", "가가가"));
             repository.save(new UserInfo("user2", "나나나"));
             repository.save(new UserInfo("user3", "다다다"));
+            repository.save(new UserInfo("user4", "라라라"));
+            repository.save(new UserInfo("user5", "마마마"));
+            repository.save(new UserInfo("user6", "바바바"));
         }
     }
 }

@@ -1,35 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<style>
-th,td{
-padding: 10px;
-text-align: center;
-}
-</style>
 <meta charset="UTF-8">
 <title>프로필 조회 서비스</title>
-</head>
-<body>
-	<div>
-		<h2>회원 프로필 조회 서비스</h2>
-		<table border="1" >
-			<thead>
-				<tr>
-					<th>회원명</th>
-					<th>조회수</th>
-					<th>등록일</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr align="center">
-					<td>가가가</td>
-					<td>1</td>
-					<td>2025-07-07 00:50:00</td>
-				</tr>
-			</tbody>
-		</table>
-		
-	</div>
+<style>
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+</style>
+<div>
+    <h2>회원 프로필 조회 서비스</h2>
+    <label>정렬:
+        <select id="sortSelect">
+            <option value="name">이름 가나다순</option>
+            <option value="views">조회순</option>
+            <option value="created">등록 최신순</option>
+        </select>
+    </label>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>회원명</th>
+            <th>조회수</th>
+            <th>등록일</th>
+        </tr>
+        </thead>
+        <tbody id="userTableBody">
+        </tbody>
+    </table>
+    <button id="prevPage">이전</button>
+    <span id="pageInfo"></span>
+    <button id="nextPage">다음</button>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tbody = document.getElementById('userTableBody');
+    const sortSelect = document.getElementById('sortSelect');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    const pageInfo = document.getElementById('pageInfo');
+    let page = 0;
+    const size = 5;
+
+    function load() {
+        fetch(`/api/userinfo?page=${page}&size=${size}&sort=${sortSelect.value}`)
+            .then(res => res.json())
+            .then(data => {
+                tbody.innerHTML = '';
+                data.content.forEach(u => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${u.name}</td><td>${u.viewCount}</td><td>${u.createdAt.replace('T',' ')}</td>`;
+                    row.addEventListener('click', () => {
+                        fetch(`/api/userinfo/${u.id}/viewcount`, {method: 'POST'})
+                            .then(() => load());
+                    });
+                    tbody.appendChild(row);
+                });
+                pageInfo.textContent = `${data.number + 1} / ${data.totalPages}`;
+                prevBtn.disabled = data.first;
+                nextBtn.disabled = data.last;
+            });
+    }
+
+    sortSelect.addEventListener('change', () => { page = 0; load(); });
+    prevBtn.addEventListener('click', () => { page--; load(); });
+    nextBtn.addEventListener('click', () => { page++; load(); });
+
+    load();
+});
+</script>
 </body>
 </html>
