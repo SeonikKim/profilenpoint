@@ -28,6 +28,9 @@ public class UserInfo {
 	@Column(name = "uview", nullable = false, columnDefinition = "int default 1")
 	private Integer viewCount = 1;
 
+	@Column(name = "point", nullable = false, columnDefinition = "int default 0")
+	private Integer point = 0;
+
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
@@ -66,6 +69,14 @@ public class UserInfo {
 
 	public void setViewCount(Integer viewCount) {
 		this.viewCount = viewCount;
+	}
+
+	public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
 	}
 
 	public void incrementViewCount() {

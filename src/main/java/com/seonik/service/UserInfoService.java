@@ -31,4 +31,10 @@ public class UserInfoService {
 		return userInfoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found"));
 	}
 
+	public UserInfo incrementViewCount(Integer id) {
+		UserInfo userInfo = getUserInfo(id);
+		userInfo.incrementViewCount();
+		return userInfoRepository.save(userInfo);
+	}
+
 }

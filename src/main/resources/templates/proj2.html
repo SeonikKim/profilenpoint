@@ -3,10 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <title>포인트 충전</title>
+<style>
+body {
+	padding: 20px;
+}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+}
+</style>
 </head>
 <body>
-<div>
-<h1>프로젝트 2 </h1>
-</div>
+	<h2>포인트 충전 서비스</h2>
+	<form id="chargeForm">
+		<label>사용자 번호: <input type="number" id="userId" required></label>
+		<label>금액: <input type="number" id="amount" required></label>
+		<label>상품 명: <input type="text" id="orderName" required></label>
+		<label>주문 ID: <input type="text" id="orderId" required></label>
+		<button type="submit">충전</button>
+	</form>
+	<p id="result"></p>
+	<script src="https://js.tosspayments.com/v1"></script>
+	<script>
+const clientKey = "test_ck_E92LAa5PVbLNqBmqGRoR87YmpXyJ";
+const tossPayments = TossPayments(clientKey);
+
+document.getElementById('chargeForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const userId = parseInt(document.getElementById('userId').value, 10);
+    const amount = parseInt(document.getElementById('amount').value, 10);
+    const orderId = document.getElementById('orderId').value;
+    const orderName = document.getElementById('orderName').value;
+    tossPayments.requestPayment('카드', {
+        amount,
+        orderId,
+        orderName,
+        successUrl: `${window.location.origin}/proj2?userId=${userId}`,
+        failUrl: `${window.location.origin}/proj2?fail=1`
+    });
+});
+
+window.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('paymentKey')) {
+        const payload = {
+            userId: parseInt(params.get('userId'), 10),
+            amount: parseInt(params.get('amount'), 10),
+            orderId: params.get('orderId'),
+            paymentKey: params.get('paymentKey')
+        };
+        fetch('/api/points/charge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('result').textContent =
+                `충전 완료: 현재 포인트 ${data.totalPoint}`;
+        })
+        .catch(() => {
+            document.getElementById('result').textContent = '충전에 실패했습니다.';
+        });
+    }
+});
+</script>
 </body>
 </html>
