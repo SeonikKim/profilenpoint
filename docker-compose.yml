@@ -5,7 +5,7 @@ services:
     image: mysql:8
     container_name: mysql
     ports:
-      - "15306:3306"           # mysql 포트변경 호스트 15306 컨테이너 3306
+      - "15306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: seonikjjang
       MYSQL_DATABASE: proj1
@@ -15,20 +15,20 @@ services:
       - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s            # 10초마다 상태 체크
-      timeout: 5s              # 5초 이내 응답 없으면 실패
-      retries: 5               # 최대 5회 재시도
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
-      context: .               
+      context: .               # 이 폴더(project root)에서 Dockerfile.app 사용
       dockerfile: Dockerfile.app
     container_name: profilenpoint-app
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "8081:8081"            # 스프링부트 포트 8081로변경
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/proj1
       SPRING_DATASOURCE_USERNAME: seonik
