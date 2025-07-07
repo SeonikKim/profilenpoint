@@ -19,10 +19,10 @@ public class PointChargeController {
 	}
 
 	@PostMapping("/charge")
-	public ChargeResponse charge(@RequestBody ChargeRequest rq) {
-		PointCharge charge = pointChargeService.charge(rq.getUserId(), rq.getPaymentKey(),
-				rq.getOrderId(), rq.getAmount());
-		return new ChargeResponse(charge.getId(), charge.getUser().getId(), charge.getAmount(),
-				charge.getUser().getPoint(), charge.getChargedAt());
-	}
+    public ChargeResponse charge(@RequestBody ChargeRequest rq) {
+            PointCharge charge = pointChargeService.charge(rq.getUserId(), rq.getPaymentKey(),
+                            rq.getOrderId(), rq.getAmount());
+            return new ChargeResponse(charge.getId(), charge.getUser().getUserId(), charge.getAmount(),
+                            charge.getUser().getPoint(), charge.getChargedAt());
+    }
 }

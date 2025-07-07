@@ -1,0 +1,26 @@
+# Dockerfile.mysql
+FROM mysql:8
+
+# 환경변수 설정
+ENV MYSQL_ROOT_PASSWORD=seonikjjang \
+    MYSQL_DATABASE=proj1 \
+    MYSQL_USER=seonik \
+    MYSQL_PASSWORD=seonikjjang
+
+# UTF8MB4 문자셋 설정
+RUN cat << 'EOF' > /etc/mysql/conf.d/charset.cnf
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
+
+[mysqld]
+character-set-server   = utf8mb4
+collation-server       = utf8mb4_unicode_ci
+# skip-character-set-client-handshake
+EOF
+
+EXPOSE 3306
+
+CMD ["mysqld"]

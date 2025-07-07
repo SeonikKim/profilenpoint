@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 public class ChargeResponse {
 	private Long chargeId;
-	private Integer userId;
+	private String userId;
 	private Integer amount;
 	private Integer totalPoint;
 	private LocalDateTime chargedAt;
 
-	public ChargeResponse(Long chargeId, Integer userId, Integer amount, Integer totalPoint, LocalDateTime chargedAt) {
+	public ChargeResponse(Long chargeId, String userId, Integer amount, Integer totalPoint, LocalDateTime chargedAt) {
 		this.chargeId = chargeId;
 		this.userId = userId;
 		this.amount = amount;
@@ -21,7 +21,7 @@ public class ChargeResponse {
 		return chargeId;
 	}
 
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 

@@ -13,8 +13,17 @@ body {
 	flex-direction: column;
 }
 
+select {
+	padding: 5px 2px;
+	border-radius: 5px;
+}
+
 .sortWrap {
 	padding-bottom: 10px;
+	display: flex;
+	align-items: center;
+	width: 253px;
+	justify-content: space-between;
 }
 
 table {
@@ -25,6 +34,11 @@ tbody tr {
 	cursor: pointer;
 }
 
+tbody tr:hover {
+	background: #007bff;
+	color: #fff;
+}
+
 th, td {
 	padding: 10px;
 	text-align: center;
@@ -33,9 +47,43 @@ th, td {
 
 .btnWrap {
 	padding-top: 10px;
+	display: flex;
+	align-items: center;
+	width: 253px;
+	justify-content: space-between;
+}
+
+a {
+	border: 1px solid #333;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 70px;
+	text-align: center;
+}
+
+a:hover {
+	background: #007bff;
+	color: #fff;
+}
+
+button {
+	border: 1px solid #333;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 70px;
+	text-align: center;
+	background: #fff;
+}
+
+button:hover {
+	background: #007bff;
+	color: #fff;
 }
 </style>
 <div class="proj1Wrap">
+	<a onclick="href='/'">메인으로</a>
 	<h2>회원 프로필 조회 서비스</h2>
 	<label class="sortWrap">정렬: <select id="sortSelect">
 			<option value="name">이름 가나다순</option>

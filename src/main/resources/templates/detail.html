@@ -7,6 +7,20 @@
 body {
 	padding: 20px;
 }
+button {
+border: 1px solid #333;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 70px;
+    text-align: center;
+    background: #fff;
+}
+button:hover {
+	background: #007bff;
+	color: #fff;
+}
+
 </style>
 </head>
 <body>
@@ -17,6 +31,9 @@ body {
 	</p>
 	<p>
 		프로필 조회수: <span id="viewCount"></span>
+	</p>
+	<p>
+		보유 포인트: <span id="point"></span>
 	</p>
 	<p>
 		프로필 등록일: <span id="createdAt"></span>
@@ -33,6 +50,7 @@ body {
             .then(u => {
                 document.getElementById('userName').textContent = u.name;
                 document.getElementById('viewCount').textContent = u.viewCount;
+                document.getElementById('point').textContent = u.point.toLocaleString();
                 document.getElementById('createdAt').textContent = u.createdAt.replace('T', ' ');
             });
     });

@@ -21,9 +21,9 @@ public class PointChargeService {
 		this.tossPaymentsClient = tossPaymentsClient;
 	}
 
-	public PointCharge charge(Integer userId, String paymentKey, String orderId, int amount) {
+	public PointCharge charge(String userId, String paymentKey, String orderId, int amount) {
 		tossPaymentsClient.confirm(paymentKey, orderId, amount);
-		UserInfo user = userInfoRepository.findById(userId)
+		UserInfo user = userInfoRepository.findByUserId(userId)
 				.orElseThrow(() -> new IllegalArgumentException("user not found"));
 		user.setPoint(user.getPoint() + amount);
 		PointCharge charge = new PointCharge(user, amount, orderId, paymentKey);

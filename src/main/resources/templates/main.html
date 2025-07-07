@@ -2,10 +2,38 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style>
+body {
+	padding: 10px;
+}
+
+.mainWrap {
+	display: flex;
+	flex-direction: column;
+	height: 300px;
+	justify-content: space-between;
+}
+
+a {
+border: 1px solid #333;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+}
+a:hover {
+	background: #007bff;
+	color: #fff;
+}
+</style>
 <title>메인화면</title>
 </head>
 <body>
-<a onclick="location.href='/proj1'">회원 프로필 조회 서비스</a><br>
-<a  onclick="location.href='/proj2'">포인트 충전서비스 구현</a>
+	<div class="mainWrap">
+		<h1>메인페이지</h1>
+		<a onclick="location.href='/proj1'">회원 프로필 조회 서비스</a> <a
+			onclick="location.href='/proj2'">포인트 충전서비스 구현</a>
+	</div>
 </body>
 </html>

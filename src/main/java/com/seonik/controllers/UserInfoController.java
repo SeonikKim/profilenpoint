@@ -37,5 +37,9 @@ public class UserInfoController {
         public UserInfo updateViewCount(@PathVariable("id") Integer id) {
                 return userInfoService.incrementViewCount(id);
         }
+        @GetMapping("/all")
+        public java.util.List<UserInfo> listAllUserInfos() {
+                return userInfoService.getAllUserInfos();
+        }
 
 }

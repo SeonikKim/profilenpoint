@@ -37,4 +37,8 @@ public class UserInfoService {
 		return userInfoRepository.save(userInfo);
 	}
 
+	public java.util.List<UserInfo> getAllUserInfos() {
+		return userInfoRepository.findAll();
+	}
+
 }

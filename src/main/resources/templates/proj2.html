@@ -8,75 +8,143 @@ body {
 	padding: 20px;
 }
 
+.mainWrap2 {
+	display: flex;
+	flex-direction: column;
+	height: 300px;
+	justify-content: space-between;
+}
+
 label {
-	display: block;
-	margin-bottom: 8px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row;
+	height: 30px;
+	align-items: center;
+}
+
+label input, label select {
+	margin-left: 10px;
+	padding: 5px;
+}
+
+a {
+	border: 1px solid #333;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 70px;
+	text-align: center;
+}
+
+a:hover {
+	background: #007bff;
+	color: #fff;
+}
+button {
+	border: 1px solid #333;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 70px;
+	text-align: center;
+	background: #fff;
+}
+
+button:hover {
+	background: #007bff;
+	color: #fff;
 }
 </style>
 </head>
 <body>
-	<h2>포인트 충전 서비스</h2>
-	<form id="chargeForm">
-		<label>사용자 번호: <input type="number" id="userId" required></label>
-		<label>금액: <input type="number" id="amount" required></label>
-		<!-- 주문명을 고정값 히든으로 -->
-		<input type="hidden" id="orderName" value="seonik포인트전환">
-		<!-- 주문 ID는 JS에서 생성 -->
-		<input type="hidden" id="orderId">
-		<button type="submit">충전</button>
-	</form>
-	<p id="result"></p>
+	<div class="mainWrap2">
+
+		<a onclick="href='/'">메인으로</a>
+		<h2>포인트 충전 서비스</h2>
+		<form id="chargeForm">
+			<label>사용자 ID: <select id="userId" required></select></label>
+			<label>금액: <input type="number" id="amount" required min="0" step="1" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+			</label>
+			<!-- 주문명을 고정값 히든으로 -->
+			<input type="hidden" id="orderName" value="seonik포인트전환">
+			<!-- 주문 ID는 JS에서 생성 -->
+			<input type="hidden" id="orderId">
+			<button type="submit">충전</button>
+		</form>
+		<p id="result"></p>
+	</div>
 
 	<script src="https://js.tosspayments.com/v1"></script>
-	<script>
-    const clientKey = "test_ck_E92LAa5PVbLNqBmqGRoR87YmpXyJ";
-    const tossPayments = TossPayments(clientKey);
+<script>
+  const clientKey = "test_ck_E92LAa5PVbLNqBmqGRoR87YmpXyJ";
+  const tossPayments = TossPayments(clientKey);
 
-    // 페이지 로드 시 주문 ID 미리 생성
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('orderId').value = crypto.randomUUID();
-    });
-
-    document.getElementById('chargeForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const userId    = parseInt(document.getElementById('userId').value, 10);
-      const amount    = parseInt(document.getElementById('amount').value, 10);
-      const orderId   = document.getElementById('orderId').value;
-      const orderName = document.getElementById('orderName').value;
-
-      tossPayments.requestPayment('카드', {
-        amount,
-        orderId,
-        orderName,
-        successUrl: `${window.location.origin}/proj2?userId=${userId}`,
-        failUrl:    `${window.location.origin}/proj2?fail=1`
-      });
-    });
-
-    window.addEventListener('DOMContentLoaded', function () {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('paymentKey')) {
-        const payload = {
-          userId:     parseInt(params.get('userId'), 10),
-          amount:     parseInt(params.get('amount'), 10),
-          orderId:    params.get('orderId'),
-          paymentKey: params.get('paymentKey')
-        };
-        fetch('/api/points/charge', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('result').textContent =
-            `충전 완료: 현재 포인트 ${data.totalPoint}`;
-        })
-        .catch(() => {
-          document.getElementById('result').textContent = '충전에 실패했습니다.';
+  // 페이지 로드 시 주문 ID 생성 및 사용자 목록 로드
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('orderId').value = crypto.randomUUID();
+    fetch('/api/userinfo/all')
+      .then(res => res.json())
+      .then(users => {
+        const select = document.getElementById('userId');
+        users.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u.userId;
+          opt.textContent = `${u.name}(${u.userId})`;
+          select.appendChild(opt);
         });
-      }
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('userId')) {
+          select.value = params.get('userId');
+        }
+      });
+  });
+
+  // 결제 요청
+  document.getElementById('chargeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const userId    = document.getElementById('userId').value;
+    const amount    = parseInt(document.getElementById('amount').value, 10);
+    const orderId   = document.getElementById('orderId').value;
+    const orderName = document.getElementById('orderName').value;
+
+    tossPayments.requestPayment('카드', {
+      amount,
+      orderId,
+      orderName,
+      successUrl: `${window.location.origin}/proj2?userId=${encodeURIComponent(userId)}`,
+      failUrl:    `${window.location.origin}/proj2?fail=1`
     });
-  </script>
+  });
+
+  // 결제 후 콜백 처리 — alert 으로 사용자 이름·ID 와 현재 포인트 표시
+  window.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('paymentKey')) {
+      const payload = {
+        userId:     params.get('userId'),
+        amount:     parseInt(params.get('amount'), 10),
+        orderId:    params.get('orderId'),
+        paymentKey: params.get('paymentKey')
+      };
+      fetch('/api/points/charge', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        // select 요소에서 선택된 option의 텍스트(이름(ID))를 가져옴
+        const select   = document.getElementById('userId');
+        const userText = select.options[select.selectedIndex].textContent;
+        // 알럿으로 출력
+        alert(`${userText}님, 충전 완료! \n현재 포인트: ${data.totalPoint.toLocaleString()}원`);
+      })
+      .catch(() => {
+        alert('충전에 실패했습니다.');
+      });
+    }
+  });
+</script>
 </body>
 </html>
