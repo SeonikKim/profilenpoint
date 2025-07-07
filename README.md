@@ -5,7 +5,7 @@ Docker Desktop 설치 및 실행 (Windows/Mac/Linux)
 
 1. Git 저장소 다운로드
 # ZIP 파일을 내려받은 경우
-# 압축 해제 후 해당 폴더로 이동
+압축 해제 후 해당 폴더로 이동
 unzip profilenpoint.zip -d profilenpoint
 cd profilenpoint
 
